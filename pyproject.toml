@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "tabforge"
+version = "0.1.0"
+description = "Technique-aware guitar tab generator: contour-first articulation detection from a single audio file."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "TabForge contributors" }]
+keywords = ["guitar", "tablature", "transcription", "pitch", "articulation", "meend"]
+
+# Core dependencies needed for the pure-DSP / logic path (segmentation,
+# articulation analysis, fretboard DP, ASCII export, eval metrics). These are
+# light and let the differentiating logic run and be tested without torch.
+dependencies = [
+    "numpy>=1.24",
+    "scipy>=1.10",
+    "typer>=0.9",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+# Heavy audio stack. Imported lazily by the stages that need it so the core
+# logic remains testable on a machine without torch.
+audio = [
+    "soundfile>=0.12",
+    "librosa>=0.10",
+    "torch>=2.0",
+    "torchcrepe>=0.0.22",
+    "demucs>=4.0",
+]
+notation = [
+    "music21>=9.1",
+    "PyGuitarPro>=0.9",
+]
+review = [
+    "fastapi>=0.110",
+    "uvicorn>=0.29",
+]
+viz = [
+    "matplotlib>=3.7",
+]
+dev = [
+    "pytest>=7.4",
+]
+# Everything, for a full local install.
+all = [
+    "tabforge[audio,notation,review,viz,dev]",
+]
+
+[project.scripts]
+tabforge = "tabforge.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+tabforge = ["review/static/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

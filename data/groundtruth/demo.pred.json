@@ -1,0 +1,74 @@
+{
+  "notes": [
+    {
+      "__type__": "TabNote",
+      "start_s": 0.0,
+      "end_s": 0.4,
+      "midi": 64,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "entry": "pluck",
+      "exit": "slide_out",
+      "bend": null,
+      "vibrato_hz": null,
+      "vibrato_depth_cents": null,
+      "raw_start_s": 0.0,
+      "string": 0,
+      "fret": 0
+    },
+    {
+      "__type__": "TabNote",
+      "start_s": 0.4,
+      "end_s": 0.72,
+      "midi": 67,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "entry": "slide_in",
+      "exit": null,
+      "bend": null,
+      "vibrato_hz": null,
+      "vibrato_depth_cents": null,
+      "raw_start_s": 0.4,
+      "string": 0,
+      "fret": 3
+    },
+    {
+      "__type__": "TabNote",
+      "start_s": 0.72,
+      "end_s": 1.14,
+      "midi": 69,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "entry": "pluck",
+      "exit": "release",
+      "bend": {
+        "__type__": "BendCurve",
+        "peak_cents": 200.0,
+        "onset_s": 0.18000000000000005,
+        "hold_s": 0.03,
+        "released": true
+      },
+      "vibrato_hz": null,
+      "vibrato_depth_cents": null,
+      "raw_start_s": 0.72,
+      "string": 0,
+      "fret": 5
+    },
+    {
+      "__type__": "TabNote",
+      "start_s": 1.1400000000000001,
+      "end_s": 1.54,
+      "midi": 71,
+      "cents_offset": 15.626636280479943,
+      "confidence": 1.0,
+      "entry": "pluck",
+      "exit": null,
+      "bend": null,
+      "vibrato_hz": 5.0,
+      "vibrato_depth_cents": 60.0,
+      "raw_start_s": 1.1400000000000001,
+      "string": 0,
+      "fret": 7
+    }
+  ]
+}

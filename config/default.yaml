@@ -1,0 +1,83 @@
+# TabForge default configuration.
+# Every threshold that governs articulation detection lives here so it can be
+# tuned without touching code. Presets in config/presets/ overlay this file.
+
+audio:
+  target_sr: 44100          # Stage 1 resample target
+  peak_dbfs: -1.0           # Stage 1 peak-normalisation target
+
+separation:
+  model: htdemucs
+  # target stem selection: vocals | other | auto (auto picks highest mean
+  # voiced-frame confidence from Stage 3)
+  default_source: auto
+
+pitch:
+  model: full               # torchcrepe model size
+  hop_ms: 5.0               # 5 ms hop — essential for fitting short slides
+  fmin: 65.0
+  fmax: 1400.0
+  median_window: 3          # torchcrepe.filter.median window (octave-error kill)
+  confidence_threshold: 0.5 # mask frames below this as unvoiced
+  fallback: pyin            # used when torchcrepe is unavailable
+
+onsets:
+  # spectral-flux onset detection; prefer slightly over-sensitive (a false
+  # pluck is easier to correct than a missed note)
+  backtrack: true
+  # delta passed to librosa.onset.onset_detect (lower = more sensitive)
+  delta: 0.06
+  # a pitch change with an onset within this window is a PLUCK, not an articulation
+  pluck_window_ms: 30.0
+
+segment:
+  min_note_ms: 45.0         # discard events shorter than this
+  new_band_cents: 40.0      # a new semitone band is entered within +/- this
+  new_band_hold_ms: 40.0    # ...and must hold for at least this long
+  stable_tol_cents: 35.0    # stable portion = longest run within +/- this
+
+articulation:
+  transition_pad_ms: 60.0   # analyse 60 ms before B start to 60 ms after
+  # --- slide ---
+  slide_min_ms: 40.0
+  slide_max_ms: 250.0       # Indian preset widens this to 400
+  slide_min_interval_cents: 100.0
+  slide_r2_min: 0.85        # Indian preset lowers this to 0.75
+  slide_max_interval_cents: null   # null = no upper bound (Indian preset)
+  # --- hammer-on / pull-off ---
+  legato_max_ms: 35.0
+  legato_min_interval_cents: 100.0
+  legato_discontinuity_cents: 60.0 # max frame-to-frame delta signalling a jump
+  # --- bend ---
+  bend_min_cents: 80.0
+  bend_max_cents: 300.0
+  bend_release_tol_cents: 40.0     # return to within this => released=True
+  # --- vibrato ---
+  vibrato_min_ms: 250.0
+  vibrato_freq_min_hz: 4.0
+  vibrato_freq_max_hz: 9.0
+  vibrato_depth_min_cents: 20.0
+  vibrato_depth_max_cents: 120.0
+
+rhythm:
+  quantize: true
+  grid: 16                  # quantise starts to nearest 1/grid note
+  max_shift_ms: 60.0        # do not move a note more than this
+  min_beat_confidence: 0.10 # below this, fall back to unquantised (rubato)
+
+fretboard:
+  max_fret: 17
+  w_pos: 1.0                # hand movement (|fret - fret_prev|)
+  w_str: 0.7                # string crossing
+  w_high: 0.5               # penalty for frets above 12
+  w_open: 1.5               # bonus for open strings
+  bend_comfort_min_fret: 5  # on top three strings, prefer bends at fret >= 5
+  default_tuning: standard
+  capo: 0
+
+export:
+  ascii_wrap: 80            # wrap ASCII tab at this many chars
+
+eval:
+  onset_tol_ms: 50.0        # note match: onset within this
+  playability_shift_frets: 5  # transitions needing a shift > this count against

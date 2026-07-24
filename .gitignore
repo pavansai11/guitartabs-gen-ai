@@ -1,0 +1,36 @@
+# TabForge — never commit copyrighted audio or generated artifacts.
+data/samples/
+out/
+*.mp3
+*.wav
+*.flac
+*.m4a
+*.ogg
+*.aac
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.venv/
+venv/
+.env
+
+# Tooling / caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+*.log
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Model / stem caches that may slip outside out/
+*.pt.cache

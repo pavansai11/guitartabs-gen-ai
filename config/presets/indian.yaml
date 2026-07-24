@@ -1,0 +1,12 @@
+# Indian repertoire preset (meend / continuous glides).
+#
+# Meend often glides across 2-5 semitones and can run 150-400 ms, longer and
+# wider than a typical Western rock slide, and is frequently curved rather than
+# linear. This overlay widens the slide window and relaxes the linearity
+# requirement so meend is rendered as a SLIDE, not misread as a bend.
+#
+# Only keys present here override config/default.yaml (deep-merged).
+articulation:
+  slide_max_ms: 400.0             # widen the slide duration ceiling
+  slide_r2_min: 0.75             # meend is often curved, not linear
+  slide_max_interval_cents: null # remove the upper bound on interval width

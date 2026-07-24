@@ -1,0 +1,54 @@
+{
+  "name": "demo (synthetic, public-domain)",
+  "audio": null,
+  "tuning": "standard",
+  "tempo_bpm": 100.0,
+  "notes": [
+    {
+      "start_s": 0.0,
+      "midi": 64,
+      "entry": "pluck",
+      "exit": "slide_out",
+      "end_s": 0.3,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "string": 0,
+      "fret": 0
+    },
+    {
+      "start_s": 0.42,
+      "midi": 67,
+      "entry": "slide_in",
+      "exit": null,
+      "end_s": 0.72,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "string": 0,
+      "fret": 3
+    },
+    {
+      "start_s": 0.72,
+      "midi": 69,
+      "entry": "pluck",
+      "exit": "release",
+      "end_s": 1.02,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "string": 0,
+      "fret": 5
+    },
+    {
+      "start_s": 1.14,
+      "midi": 71,
+      "entry": "pluck",
+      "exit": null,
+      "vibrato_hz": 5.0,
+      "vibrato_depth_cents": 60.0,
+      "end_s": 1.44,
+      "cents_offset": 0.0,
+      "confidence": 1.0,
+      "string": 0,
+      "fret": 7
+    }
+  ]
+}

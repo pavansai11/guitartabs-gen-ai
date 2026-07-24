@@ -24,6 +24,10 @@ def transcribe(
     preset: str = typer.Option(None, help="Config preset, e.g. 'indian'."),
     tuning: str = typer.Option("standard", help="Tuning from config/tunings.yaml."),
     capo: int = typer.Option(0, help="Capo fret."),
+    style: str = typer.Option("auto", help="Fingering: auto|single|dp "
+                              "(single = whole melody on one string)."),
+    string: int = typer.Option(1, help="String index for --style single "
+                               "(0=high e, 1=B)."),
     quantize: bool = typer.Option(True, "--quantize/--no-quantize",
                                   help="Rhythmic quantisation."),
     out: Path = typer.Option(Path("out"), help="Output root directory."),
@@ -33,9 +37,12 @@ def transcribe(
     from .pipeline import transcribe as run
 
     cfg = load_config(preset=preset)
-    typer.echo(f"Transcribing {audio} (source={source}, preset={preset}) ...")
+    strategy = {"auto": None, "single": "single_string", "dp": "dp"}.get(style)
+    typer.echo(f"Transcribing {audio} (source={source}, preset={preset}, "
+               f"style={style}) ...")
     result = run(audio, cfg=cfg, out_root=out, source=source, tuning_name=tuning,
-                 capo=capo, quantize=quantize, preset=preset)
+                 capo=capo, quantize=quantize, preset=preset,
+                 strategy=strategy, melody_string=string)
     typer.echo(f"song_id: {result.song_id}")
     typer.echo(f"notes: {len(result.score.notes)}  "
                f"(octave-folded: {len(result.folded)})")

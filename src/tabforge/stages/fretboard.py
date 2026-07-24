@@ -148,13 +148,59 @@ def assign_fretboard(notes: list[NoteEvent], tuning: list[int], cfg: Config,
     return tab_notes, folded
 
 
+def assign_single_string(notes: list[NoteEvent], tuning: list[int],
+                         string_idx: int, cfg: Config) -> list[TabNote]:
+    """Place the whole melody on ONE string (vocal-line rendering).
+
+    This is the idiomatic way to play a sung film-song melody on guitar and how
+    the reference tabs are written: every note on one string, octave-normalised
+    to the fret nearest the previous note, so meend renders as slides and the
+    hand moves linearly. Constraints are automatic (one string), so no DP.
+    """
+    max_fret = int(cfg.get("fretboard", "max_fret", 17))
+    open_midi = tuning[string_idx]
+    center = round(max_fret * 0.4)
+    prev: int | None = None
+    out: list[TabNote] = []
+    for n in notes:
+        best, best_cost = None, float("inf")
+        for k in range(-4, 5):
+            fret = n.midi - open_midi + 12 * k
+            if fret < 0 or fret > max_fret:
+                continue
+            cost = abs(fret - center) if prev is None else abs(fret - prev)
+            if cost < best_cost:
+                best_cost, best = cost, fret
+        if best is None:  # out of range even octave-folded — clamp
+            m = n.midi
+            while m - open_midi < 0:
+                m += 12
+            while m - open_midi > max_fret:
+                m -= 12
+            best = max(0, min(max_fret, m - open_midi))
+        out.append(TabNote.from_note(n, string=string_idx, fret=best))
+        prev = best
+    return out
+
+
 def build_score(notes: list[NoteEvent], tuning: list[int], cfg: Config,
                 tempo_bpm: float = 120.0,
                 time_signature: tuple[int, int] = (4, 4),
-                capo: int | None = None) -> tuple[Score, list[int]]:
+                capo: int | None = None,
+                strategy: str | None = None,
+                melody_string: int | None = None) -> tuple[Score, list[int]]:
     if capo is None:
         capo = int(cfg.get("fretboard", "capo", 0))
-    tab_notes, folded = assign_fretboard(notes, tuning, cfg, capo=capo)
+    if strategy is None:
+        strategy = cfg.get("fretboard", "strategy", "dp")
+    if melody_string is None:
+        melody_string = int(cfg.get("fretboard", "melody_string", 1))
+
+    if strategy == "single_string":
+        tab_notes = assign_single_string(notes, tuning, melody_string, cfg)
+        folded: list[int] = []
+    else:
+        tab_notes, folded = assign_fretboard(notes, tuning, cfg, capo=capo)
     score = Score(notes=tab_notes, tempo_bpm=tempo_bpm,
                   time_signature=time_signature, tuning=tuning, capo=capo)
     return score, folded

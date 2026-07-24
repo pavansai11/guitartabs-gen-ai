@@ -86,12 +86,41 @@ tabforge eval --set data/groundtruth/
 
 ```
 --source auto|vocals|other   which Demucs stem to transcribe (default auto)
---preset indian              widen slide thresholds for meend (default none)
+--preset indian              meend preset: single-string vocal rendering (below)
 --tuning standard            a tuning defined in config/tunings.yaml
 --capo 0                     capo fret
+--style auto|single|dp       fingering strategy (single = whole melody one string)
+--string 1                   string for --style single (0=high e, 1=B)
 --no-quantize                skip rhythmic quantisation entirely
 --out out/                   output root
 ```
+
+### Transcribing a sung melody (Indian film songs)
+
+A vocal line is monophonic and, on guitar, is idiomatically played as a
+**single-string melody with slides** — the whole phrase on one string (usually
+the B string, frets 0–15), the way hand-tabbed film-song tabs are written.
+Two things make this work:
+
+1. **Isolate the voice first.** A full mix has no single pitch to follow. The
+   pipeline's Demucs stage does this — use `--source vocals`. (Feeding a full
+   mix straight to a pitch tracker produces a six-string scatter across octaves;
+   that is a garbage-in problem, not a fretboard problem.)
+2. **Render on one string.** The `indian` preset sets
+   `fretboard.strategy: single_string`, biases articulation toward slides (not
+   bends/hammers), and de-noises the contour into a sparse, playable set of
+   notes.
+
+```bash
+tabforge transcribe song.mp3 --source vocals --preset indian
+# equivalently, force it on any input:
+tabforge transcribe melody.wav --style single --string 1
+```
+
+The `single_string` strategy octave-normalises each note to the fret nearest the
+previous one, so meend renders as slides and the hand moves linearly. The
+default `dp` strategy (Sayegh optimum-path over all six strings) remains the
+choice for guitar solos.
 
 Every stage writes JSON to `out/<song_id>/`. `song_id` is the first 12 hex
 chars of the SHA-256 of the input file's bytes, so the same file always maps to

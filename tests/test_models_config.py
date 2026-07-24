@@ -57,9 +57,11 @@ def test_config_default_and_indian_preset():
 
     indian = load_config(preset="indian")
     assert indian.get("articulation", "slide_max_ms") == 400.0
-    assert indian.get("articulation", "slide_r2_min") == 0.75
+    assert indian.get("articulation", "slide_r2_min") == 0.72
+    # the preset switches to single-string vocal fingering
+    assert indian.get("fretboard", "strategy") == "single_string"
     # untouched keys survive the overlay
-    assert indian.get("articulation", "bend_min_cents") == 80.0
+    assert indian.get("articulation", "vibrato_freq_min_hz") == 4.0
 
 
 def test_tunings():

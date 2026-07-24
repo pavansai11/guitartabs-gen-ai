@@ -8,5 +8,21 @@
 # Only keys present here override config/default.yaml (deep-merged).
 articulation:
   slide_max_ms: 400.0             # widen the slide duration ceiling
-  slide_r2_min: 0.75             # meend is often curved, not linear
+  slide_r2_min: 0.72             # meend is often curved, not linear
   slide_max_interval_cents: null # remove the upper bound on interval width
+  # suppress bends / legato so glides render as SLIDES, not bends or hammers
+  # (on guitar the correct rendering of meend is a slide)
+  bend_min_cents: 170.0
+  legato_min_interval_cents: 200.0
+
+# Vocal melodies are transcribed monophonically and played on a single string
+# with slides (this is how the reference film-song tabs are written). De-noise
+# the contour so a sung line yields a sparse, playable set of notes.
+segment:
+  min_note_ms: 90.0
+  new_band_hold_ms: 65.0
+
+fretboard:
+  strategy: single_string        # whole melody on one string
+  melody_string: 1               # the B string (frets 0-15)
+  max_fret: 15

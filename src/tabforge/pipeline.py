@@ -44,6 +44,7 @@ def transcribe(audio_path: str | Path, cfg: Config | None = None,
                out_root: str | Path = "out", source: str = "auto",
                tuning_name: str = "standard", capo: int = 0,
                quantize: bool = True, preset: str | None = None,
+               strategy: str | None = None, melody_string: int | None = None,
                write_artifacts: bool = True) -> TranscribeResult:
     """Full transcription: audio file -> Score, writing artifacts per stage."""
     # audio-facing stages imported here so the pure path stays torch-free
@@ -105,7 +106,8 @@ def transcribe(audio_path: str | Path, cfg: Config | None = None,
     # Stage 8 — fretboard
     tuning = get_tuning(tuning_name)
     score, folded = fret_stage.build_score(
-        notes, tuning, cfg, tempo_bpm=grid.tempo_bpm, capo=capo)
+        notes, tuning, cfg, tempo_bpm=grid.tempo_bpm, capo=capo,
+        strategy=strategy, melody_string=melody_string)
 
     result = TranscribeResult(
         song_id=song_id, f0=f0, onsets=onsets, notes=notes, score=score,

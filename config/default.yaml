@@ -66,6 +66,12 @@ rhythm:
   min_beat_confidence: 0.10 # below this, fall back to unquantised (rubato)
 
 fretboard:
+  # strategy: dp = Sayegh optimum-path over all strings;
+  #           single_string = whole melody on one string (vocal-line rendering,
+  #           octave-normalised nearest-fret). Vocal/film melodies are idiomatic
+  #           on a single string with slides — see presets/indian.yaml.
+  strategy: dp
+  melody_string: 1          # string index used by single_string (0=high e, 1=B)
   max_fret: 17
   w_pos: 1.0                # hand movement (|fret - fret_prev|)
   w_str: 0.7                # string crossing
